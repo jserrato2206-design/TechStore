@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">TechStore</string>
+    <string name="tagline">Tu tienda de tecnología favorita</string>
+    <string name="welcome_title">¡Bienvenido a TechStore!</string>
+    <string name="welcome_subtitle">Descubre los mejores productos tecnológicos</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="register">Registrarse</string>
+    <string name="email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="name">Nombre</string>
+    <string name="phone">Teléfono</string>
+    <string name="confirm_password">Confirmar Contraseña</string>
+    <string name="create_account">Crear Cuenta</string>
+    <string name="no_account">¿No tienes cuenta? Regístrate aquí</string>
+    <string name="have_account">¿Ya tienes cuenta? Inicia sesión aquí</string>
+    <string name="back">Volver</string>
+    <string name="logout">Cerrar Sesión</string>
+    <string name="profile">Perfil</string>
+    <string name="my_orders">Mis Pedidos</string>
+    <string name="favorites">Favoritos</string>
+    <string name="user_info">Información del Usuario</string>
+    <string name="quick_actions">Acciones Rápidas</string>
+    <string name="invalid_email">Email inválido</string>
+    <string name="password_too_short">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="passwords_dont_match">Las contraseñas no coinciden</string>
+    <string name="field_required">Este campo es obligatorio</string>
+    <string name="login_success">Inicio de sesión exitoso</string>
+    <string name="register_success">Registro exitoso</string>
+    <string name="invalid_credentials">Credenciales inválidas</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="recover_password">Recuperar Contraseña</string>
+    <string name="enter_email_recovery">Ingresa tu email para recuperar tu contraseña</string>
+    <string name="send_recovery">Enviar Enlace de Recuperación</string>
+    <string name="recovery_sent">Se ha enviado un enlace de recuperación a tu email</string>
+    <string name="user_not_found">Usuario no encontrado</string>
+    <string name="invalid_user">Usuario inválido</string>
+</resources>

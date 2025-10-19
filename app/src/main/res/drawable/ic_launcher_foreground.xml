@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Store icon -->
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M30,30 L78,30 L78,45 L30,45 Z" />
+    
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M35,45 L35,75 L45,75 L45,60 L63,60 L63,75 L73,75 L73,45 Z" />
+    
+    <!-- T letter -->
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M45,80 L63,80 L63,85 L45,85 Z" />
+    
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M50,80 L58,80 L58,90 L50,90 Z" />
+</vector>
