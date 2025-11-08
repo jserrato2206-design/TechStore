@@ -3,8 +3,14 @@ package com.techstore;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -16,6 +22,7 @@ import com.techstore.adapters.ProductAdapter;
 import com.techstore.database.DatabaseHelper;
 import com.techstore.models.CartItem;
 import com.techstore.models.Product;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductsActivity extends AppCompatActivity implements ProductAdapter.OnProductClickListener {
@@ -29,6 +36,10 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     private ImageButton btnAddProduct, btnCart, btnBack;
     private FloatingActionButton fabCart;
     private TextView tvCartBadge;
+    private EditText etSearch;
+    private Spinner spinnerCategory;
+    private List<Product> allProducts;
+    private List<String> categories;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +70,8 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         btnBack = findViewById(R.id.btnBack);
         fabCart = findViewById(R.id.fabCart);
         tvCartBadge = findViewById(R.id.tvCartBadge);
+        etSearch = findViewById(R.id.etSearch);
+        spinnerCategory = findViewById(R.id.spinnerCategory);
         dbHelper = new DatabaseHelper(this);
     }
     
@@ -76,10 +89,84 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     }
     
     private void loadProducts() {
-        List<Product> products = dbHelper.getAllProducts();
-        adapter.updateProducts(products);
+        allProducts = dbHelper.getAllProducts();
+        adapter.updateProducts(allProducts);
+        setupCategoryFilter();
+        setupSearchFilter();
+        updateEmptyState();
+    }
+    
+    private void setupCategoryFilter() {
+        categories = new ArrayList<>();
+        categories.add("Todas las categorías");
+        categories.addAll(dbHelper.getAllCategories());
         
-        if (products.isEmpty()) {
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this, 
+                android.R.layout.simple_spinner_item, categories);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategory.setAdapter(categoryAdapter);
+        
+        spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filterProducts();
+            }
+            
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+    
+    private void setupSearchFilter() {
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterProducts();
+            }
+            
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+    
+    private void filterProducts() {
+        String searchQuery = etSearch.getText().toString().trim();
+        String selectedCategory = spinnerCategory.getSelectedItem().toString();
+        
+        List<Product> filteredProducts = new ArrayList<>();
+        
+        if (selectedCategory.equals("Todas las categorías")) {
+            if (searchQuery.isEmpty()) {
+                filteredProducts = allProducts;
+            } else {
+                filteredProducts = dbHelper.searchProducts(searchQuery);
+            }
+        } else {
+            if (searchQuery.isEmpty()) {
+                filteredProducts = dbHelper.getProductsByCategory(selectedCategory);
+            } else {
+                List<Product> categoryProducts = dbHelper.getProductsByCategory(selectedCategory);
+                for (Product product : categoryProducts) {
+                    if (product.getName().toLowerCase().contains(searchQuery.toLowerCase()) ||
+                        product.getDescription().toLowerCase().contains(searchQuery.toLowerCase())) {
+                        filteredProducts.add(product);
+                    }
+                }
+            }
+        }
+        
+        adapter.updateProducts(filteredProducts);
+        updateEmptyState();
+    }
+    
+    private void updateEmptyState() {
+        if (adapter.getItemCount() == 0) {
             layoutEmpty.setVisibility(View.VISIBLE);
             recyclerViewProducts.setVisibility(View.GONE);
         } else {

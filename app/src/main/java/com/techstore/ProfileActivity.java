@@ -68,12 +68,12 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         btnMyOrders.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, ProductsActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, OrdersHistoryActivity.class);
             startActivity(intent);
         });
 
         btnFavorites.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, CartActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, FavoritesActivity.class);
             startActivity(intent);
         });
 

@@ -67,6 +67,16 @@
             android:name=".ProductDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.TechStore" />
+            
+        <activity
+            android:name=".OrdersHistoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TechStore" />
+            
+        <activity
+            android:name=".FavoritesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TechStore" />
     </application>
 
 </manifest>

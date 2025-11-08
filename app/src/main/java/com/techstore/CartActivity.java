@@ -117,6 +117,11 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
                     .setTitle("💳 Confirmar Compra")
                     .setMessage(message)
                     .setPositiveButton("Pagar", (dialog, which) -> {
+                        // Guardar pedidos antes de limpiar el carrito
+                        for (CartItem item : items) {
+                            dbHelper.createOrder(userId, item.getProductId(), item.getProductName(), 
+                                    item.getQuantity(), item.getPrice(), item.getPrice() * item.getQuantity());
+                        }
                         dbHelper.clearCart(userId);
                         Toast.makeText(this, "¡Compra realizada exitosamente! Total pagado: $" + String.format("%.2f", total), Toast.LENGTH_LONG).show();
                         finish();

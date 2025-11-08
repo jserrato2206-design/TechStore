@@ -8,13 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.techstore.models.Product;
 import com.techstore.models.User;
 import com.techstore.models.CartItem;
+import com.techstore.models.Order;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     
     private static final String DATABASE_NAME = "TechStore.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     
     // Tabla Usuarios
     private static final String TABLE_USERS = "users";
@@ -41,6 +42,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COL_CART_USER_ID = "user_id";
     private static final String COL_CART_PRODUCT_ID = "product_id";
     private static final String COL_CART_QUANTITY = "quantity";
+    
+    // Tabla Pedidos
+    private static final String TABLE_ORDERS = "orders";
+    private static final String COL_ORDER_ID = "id";
+    private static final String COL_ORDER_USER_ID = "user_id";
+    private static final String COL_ORDER_PRODUCT_ID = "product_id";
+    private static final String COL_ORDER_PRODUCT_NAME = "product_name";
+    private static final String COL_ORDER_QUANTITY = "quantity";
+    private static final String COL_ORDER_PRICE = "price";
+    private static final String COL_ORDER_TOTAL = "total";
+    private static final String COL_ORDER_DATE = "order_date";
+    
+    // Tabla Favoritos
+    private static final String TABLE_FAVORITES = "favorites";
+    private static final String COL_FAVORITE_ID = "id";
+    private static final String COL_FAVORITE_USER_ID = "user_id";
+    private static final String COL_FAVORITE_PRODUCT_ID = "product_id";
     
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -88,6 +106,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY(" + COL_CART_PRODUCT_ID + ") REFERENCES " + TABLE_PRODUCTS + "(" + COL_PRODUCT_ID + "))";
         db.execSQL(createCartTable);
         
+        // Crear tabla de pedidos
+        String createOrdersTable = "CREATE TABLE " + TABLE_ORDERS + " (" +
+                COL_ORDER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_ORDER_USER_ID + " INTEGER NOT NULL, " +
+                COL_ORDER_PRODUCT_ID + " INTEGER NOT NULL, " +
+                COL_ORDER_PRODUCT_NAME + " TEXT NOT NULL, " +
+                COL_ORDER_QUANTITY + " INTEGER NOT NULL, " +
+                COL_ORDER_PRICE + " REAL NOT NULL, " +
+                COL_ORDER_TOTAL + " REAL NOT NULL, " +
+                COL_ORDER_DATE + " TEXT NOT NULL, " +
+                "FOREIGN KEY(" + COL_ORDER_USER_ID + ") REFERENCES " + TABLE_USERS + "(" + COL_USER_ID + "), " +
+                "FOREIGN KEY(" + COL_ORDER_PRODUCT_ID + ") REFERENCES " + TABLE_PRODUCTS + "(" + COL_PRODUCT_ID + "))";
+        db.execSQL(createOrdersTable);
+        
+        // Crear tabla de favoritos
+        String createFavoritesTable = "CREATE TABLE " + TABLE_FAVORITES + " (" +
+                COL_FAVORITE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_FAVORITE_USER_ID + " INTEGER NOT NULL, " +
+                COL_FAVORITE_PRODUCT_ID + " INTEGER NOT NULL, " +
+                "UNIQUE(" + COL_FAVORITE_USER_ID + ", " + COL_FAVORITE_PRODUCT_ID + "), " +
+                "FOREIGN KEY(" + COL_FAVORITE_USER_ID + ") REFERENCES " + TABLE_USERS + "(" + COL_USER_ID + "), " +
+                "FOREIGN KEY(" + COL_FAVORITE_PRODUCT_ID + ") REFERENCES " + TABLE_PRODUCTS + "(" + COL_PRODUCT_ID + "))";
+        db.execSQL(createFavoritesTable);
+        
         // Insertar productos de ejemplo
         insertSampleProducts(db);
     }
@@ -119,6 +161,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
                 onCreate(db);
             }
+        }
+        if (oldVersion < 3) {
+            // Crear tabla de pedidos
+            String createOrdersTable = "CREATE TABLE IF NOT EXISTS " + TABLE_ORDERS + " (" +
+                    COL_ORDER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_ORDER_USER_ID + " INTEGER NOT NULL, " +
+                    COL_ORDER_PRODUCT_ID + " INTEGER NOT NULL, " +
+                    COL_ORDER_PRODUCT_NAME + " TEXT NOT NULL, " +
+                    COL_ORDER_QUANTITY + " INTEGER NOT NULL, " +
+                    COL_ORDER_PRICE + " REAL NOT NULL, " +
+                    COL_ORDER_TOTAL + " REAL NOT NULL, " +
+                    COL_ORDER_DATE + " TEXT NOT NULL)";
+            db.execSQL(createOrdersTable);
+            
+            // Crear tabla de favoritos
+            String createFavoritesTable = "CREATE TABLE IF NOT EXISTS " + TABLE_FAVORITES + " (" +
+                    COL_FAVORITE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_FAVORITE_USER_ID + " INTEGER NOT NULL, " +
+                    COL_FAVORITE_PRODUCT_ID + " INTEGER NOT NULL, " +
+                    "UNIQUE(" + COL_FAVORITE_USER_ID + ", " + COL_FAVORITE_PRODUCT_ID + "))";
+            db.execSQL(createFavoritesTable);
         }
     }
     
@@ -430,5 +493,189 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(COL_PRODUCT_IMAGE, product[5]);
             db.insert(TABLE_PRODUCTS, null, values);
         }
+    }
+    
+    // ========== BÚSQUEDA Y FILTROS ==========
+    
+    public List<Product> searchProducts(String query) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Product> products = new ArrayList<>();
+        
+        String selection = COL_PRODUCT_NAME + " LIKE ? OR " + COL_PRODUCT_DESCRIPTION + " LIKE ?";
+        String[] selectionArgs = {"%" + query + "%", "%" + query + "%"};
+        
+        Cursor cursor = db.query(TABLE_PRODUCTS, null, selection, selectionArgs, null, null, null);
+        
+        if (cursor.moveToFirst()) {
+            do {
+                Product product = new Product(
+                        cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_ID)),
+                        cursor.getString(cursor.getColumnIndex(COL_PRODUCT_NAME)),
+                        cursor.getString(cursor.getColumnIndex(COL_PRODUCT_DESCRIPTION)),
+                        cursor.getDouble(cursor.getColumnIndex(COL_PRODUCT_PRICE)),
+                        cursor.getString(cursor.getColumnIndex(COL_PRODUCT_CATEGORY)),
+                        cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_STOCK))
+                );
+                products.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return products;
+    }
+    
+    public List<Product> getProductsByCategory(String category) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Product> products = new ArrayList<>();
+        
+        Cursor cursor = db.query(TABLE_PRODUCTS, null, COL_PRODUCT_CATEGORY + "=?", 
+                new String[]{category}, null, null, null);
+        
+        if (cursor.moveToFirst()) {
+            do {
+                Product product = new Product(
+                        cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_ID)),
+                        cursor.getString(cursor.getColumnIndex(COL_PRODUCT_NAME)),
+                        cursor.getString(cursor.getColumnIndex(COL_PRODUCT_DESCRIPTION)),
+                        cursor.getDouble(cursor.getColumnIndex(COL_PRODUCT_PRICE)),
+                        cursor.getString(cursor.getColumnIndex(COL_PRODUCT_CATEGORY)),
+                        cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_STOCK))
+                );
+                products.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return products;
+    }
+    
+    public List<String> getAllCategories() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> categories = new ArrayList<>();
+        
+        Cursor cursor = db.query(true, TABLE_PRODUCTS, new String[]{COL_PRODUCT_CATEGORY}, 
+                null, null, null, null, COL_PRODUCT_CATEGORY + " ASC", null);
+        
+        if (cursor.moveToFirst()) {
+            do {
+                categories.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return categories;
+    }
+    
+    // ========== OPERACIONES DE PEDIDOS ==========
+    
+    public long createOrder(int userId, int productId, String productName, int quantity, double price, double total) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_ORDER_USER_ID, userId);
+        values.put(COL_ORDER_PRODUCT_ID, productId);
+        values.put(COL_ORDER_PRODUCT_NAME, productName);
+        values.put(COL_ORDER_QUANTITY, quantity);
+        values.put(COL_ORDER_PRICE, price);
+        values.put(COL_ORDER_TOTAL, total);
+        values.put(COL_ORDER_DATE, java.text.SimpleDateFormat.getDateTimeInstance().format(new java.util.Date()));
+        
+        long id = db.insert(TABLE_ORDERS, null, values);
+        db.close();
+        return id;
+    }
+    
+    public List<Order> getUserOrders(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Order> orders = new ArrayList<>();
+        
+        Cursor cursor = db.query(TABLE_ORDERS, null, COL_ORDER_USER_ID + "=?", 
+                new String[]{String.valueOf(userId)}, null, null, COL_ORDER_DATE + " DESC");
+        
+        if (cursor.moveToFirst()) {
+            do {
+                Order order = new Order(
+                        cursor.getInt(cursor.getColumnIndex(COL_ORDER_ID)),
+                        cursor.getInt(cursor.getColumnIndex(COL_ORDER_USER_ID)),
+                        cursor.getInt(cursor.getColumnIndex(COL_ORDER_PRODUCT_ID)),
+                        cursor.getString(cursor.getColumnIndex(COL_ORDER_PRODUCT_NAME)),
+                        cursor.getInt(cursor.getColumnIndex(COL_ORDER_QUANTITY)),
+                        cursor.getDouble(cursor.getColumnIndex(COL_ORDER_PRICE)),
+                        cursor.getDouble(cursor.getColumnIndex(COL_ORDER_TOTAL)),
+                        cursor.getString(cursor.getColumnIndex(COL_ORDER_DATE))
+                );
+                orders.add(order);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return orders;
+    }
+    
+    // ========== OPERACIONES DE FAVORITOS ==========
+    
+    public boolean addToFavorites(int userId, int productId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_FAVORITE_USER_ID, userId);
+        values.put(COL_FAVORITE_PRODUCT_ID, productId);
+        
+        try {
+            long id = db.insertWithOnConflict(TABLE_FAVORITES, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+            db.close();
+            return id != -1;
+        } catch (Exception e) {
+            db.close();
+            return false;
+        }
+    }
+    
+    public boolean removeFromFavorites(int userId, int productId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsAffected = db.delete(TABLE_FAVORITES, 
+                COL_FAVORITE_USER_ID + "=? AND " + COL_FAVORITE_PRODUCT_ID + "=?", 
+                new String[]{String.valueOf(userId), String.valueOf(productId)});
+        db.close();
+        return rowsAffected > 0;
+    }
+    
+    public boolean isFavorite(int userId, int productId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_FAVORITES, null, 
+                COL_FAVORITE_USER_ID + "=? AND " + COL_FAVORITE_PRODUCT_ID + "=?", 
+                new String[]{String.valueOf(userId), String.valueOf(productId)}, 
+                null, null, null);
+        
+        boolean isFavorite = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+        return isFavorite;
+    }
+    
+    public List<Product> getFavoriteProducts(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Product> products = new ArrayList<>();
+        
+        String query = "SELECT p.* FROM " + TABLE_PRODUCTS + " p " +
+                "INNER JOIN " + TABLE_FAVORITES + " f ON p." + COL_PRODUCT_ID + " = f." + COL_FAVORITE_PRODUCT_ID + " " +
+                "WHERE f." + COL_FAVORITE_USER_ID + " = ?";
+        
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+        
+        if (cursor.moveToFirst()) {
+            do {
+                Product product = new Product(
+                        cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_ID)),
+                        cursor.getString(cursor.getColumnIndex(COL_PRODUCT_NAME)),
+                        cursor.getString(cursor.getColumnIndex(COL_PRODUCT_DESCRIPTION)),
+                        cursor.getDouble(cursor.getColumnIndex(COL_PRODUCT_PRICE)),
+                        cursor.getString(cursor.getColumnIndex(COL_PRODUCT_CATEGORY)),
+                        cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_STOCK))
+                );
+                products.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return products;
     }
 }
