@@ -121,7 +121,11 @@
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
                         android:text="@string/my_orders"
-                        style="@style/ButtonSecondary" />
+                        android:textColor="@color/primary_blue"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/button_secondary"
+                        android:padding="16dp" />
 
                     <Button
                         android:id="@+id/btnFavorites"
@@ -130,7 +134,11 @@
                         android:layout_weight="1"
                         android:layout_marginStart="8dp"
                         android:text="@string/favorites"
-                        style="@style/ButtonSecondary" />
+                        android:textColor="@color/primary_blue"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/button_secondary"
+                        android:padding="16dp" />
 
                 </LinearLayout>
 
