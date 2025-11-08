@@ -315,18 +315,72 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Insertar productos de ejemplo
     private void insertSampleProducts(SQLiteDatabase db) {
         String[][] products = {
-            {"iPhone 15 Pro", "Smartphone Apple con chip A17 Pro, 128GB", "999.99", "Smartphones", "50", ""},
-            {"Samsung Galaxy S24", "Smartphone Android con pantalla AMOLED 6.2", "899.99", "Smartphones", "45", ""},
-            {"MacBook Pro M3", "Laptop Apple con chip M3, 14 pulgadas, 512GB", "1999.99", "Laptops", "30", ""},
-            {"Dell XPS 15", "Laptop Dell con Intel i7, 16GB RAM, 512GB SSD", "1499.99", "Laptops", "25", ""},
-            {"iPad Air", "Tablet Apple con chip M1, 64GB", "599.99", "Tablets", "40", ""},
-            {"Samsung Galaxy Tab S9", "Tablet Android con pantalla 11 pulgadas", "699.99", "Tablets", "35", ""},
-            {"AirPods Pro", "Auriculares inalámbricos con cancelación de ruido", "249.99", "Audio", "60", ""},
-            {"Sony WH-1000XM5", "Auriculares over-ear con cancelación de ruido", "399.99", "Audio", "20", ""},
-            {"NVIDIA RTX 4090", "Tarjeta gráfica para gaming y diseño", "1599.99", "Componentes", "15", ""},
-            {"AMD Ryzen 9 7950X", "Procesador AMD de alto rendimiento", "699.99", "Componentes", "25", ""},
-            {"PlayStation 5", "Consola de videojuegos de nueva generación", "499.99", "Consolas", "30", ""},
-            {"Xbox Series X", "Consola Microsoft con 1TB de almacenamiento", "499.99", "Consolas", "28", ""}
+            // Smartphones
+            {"iPhone 15 Pro", "Smartphone Apple con chip A17 Pro, 128GB, pantalla Super Retina XDR", "999.99", "Smartphones", "50", ""},
+            {"iPhone 15", "Smartphone Apple con chip A16 Bionic, 128GB, pantalla 6.1 pulgadas", "799.99", "Smartphones", "60", ""},
+            {"Samsung Galaxy S24", "Smartphone Android con pantalla AMOLED 6.2, 256GB", "899.99", "Smartphones", "45", ""},
+            {"Samsung Galaxy S24 Ultra", "Smartphone premium con S Pen, 512GB, cámara 200MP", "1199.99", "Smartphones", "30", ""},
+            {"Google Pixel 8 Pro", "Smartphone Google con Tensor G3, cámara avanzada", "899.99", "Smartphones", "40", ""},
+            {"Xiaomi 14 Pro", "Smartphone con Snapdragon 8 Gen 3, pantalla 2K", "699.99", "Smartphones", "55", ""},
+            {"OnePlus 12", "Smartphone con Snapdragon 8 Gen 3, carga rápida 100W", "799.99", "Smartphones", "35", ""},
+            
+            // Laptops
+            {"MacBook Pro M3", "Laptop Apple con chip M3, 14 pulgadas, 512GB SSD", "1999.99", "Laptops", "30", ""},
+            {"MacBook Air M2", "Laptop Apple con chip M2, 13 pulgadas, 256GB SSD", "1299.99", "Laptops", "40", ""},
+            {"Dell XPS 15", "Laptop Dell con Intel i7, 16GB RAM, 512GB SSD, pantalla 4K", "1499.99", "Laptops", "25", ""},
+            {"HP Spectre x360", "Laptop convertible 2-en-1, Intel i7, 16GB RAM", "1399.99", "Laptops", "20", ""},
+            {"Lenovo ThinkPad X1", "Laptop empresarial con Intel i7, 16GB RAM, 512GB", "1599.99", "Laptops", "18", ""},
+            {"ASUS ROG Strix", "Laptop gaming con RTX 4060, AMD Ryzen 9, 16GB RAM", "1699.99", "Laptops", "15", ""},
+            {"Acer Predator Helios", "Laptop gaming con RTX 4070, Intel i7, 32GB RAM", "1899.99", "Laptops", "12", ""},
+            
+            // Tablets
+            {"iPad Air", "Tablet Apple con chip M1, 64GB, pantalla 10.9 pulgadas", "599.99", "Tablets", "40", ""},
+            {"iPad Pro 12.9", "Tablet Apple con chip M2, 256GB, pantalla 12.9 pulgadas", "1099.99", "Tablets", "25", ""},
+            {"Samsung Galaxy Tab S9", "Tablet Android con pantalla 11 pulgadas, S Pen incluido", "699.99", "Tablets", "35", ""},
+            {"Microsoft Surface Pro 9", "Tablet 2-en-1 con Windows 11, Intel i5, 256GB", "999.99", "Tablets", "20", ""},
+            {"Lenovo Tab P12", "Tablet Android con pantalla 12.6 pulgadas, 256GB", "449.99", "Tablets", "30", ""},
+            
+            // Audio
+            {"AirPods Pro", "Auriculares inalámbricos con cancelación de ruido activa", "249.99", "Audio", "60", ""},
+            {"AirPods Max", "Auriculares over-ear premium con cancelación de ruido", "549.99", "Audio", "25", ""},
+            {"Sony WH-1000XM5", "Auriculares over-ear con cancelación de ruido líder", "399.99", "Audio", "20", ""},
+            {"Bose QuietComfort 45", "Auriculares con cancelación de ruido premium", "329.99", "Audio", "30", ""},
+            {"JBL Flip 6", "Parlante Bluetooth portátil con sonido potente", "129.99", "Audio", "50", ""},
+            {"Sonos Beam", "Barra de sonido para TV con Alexa integrada", "449.99", "Audio", "15", ""},
+            {"Samsung Galaxy Buds2 Pro", "Auriculares inalámbricos con cancelación de ruido", "199.99", "Audio", "40", ""},
+            
+            // Componentes
+            {"NVIDIA RTX 4090", "Tarjeta gráfica para gaming y diseño, 24GB GDDR6X", "1599.99", "Componentes", "15", ""},
+            {"NVIDIA RTX 4080", "Tarjeta gráfica de alto rendimiento, 16GB GDDR6X", "1199.99", "Componentes", "20", ""},
+            {"AMD Ryzen 9 7950X", "Procesador AMD de alto rendimiento, 16 núcleos", "699.99", "Componentes", "25", ""},
+            {"Intel Core i9-13900K", "Procesador Intel de alto rendimiento, 24 núcleos", "589.99", "Componentes", "30", ""},
+            {"Corsair Vengeance DDR5", "Memoria RAM 32GB DDR5 6000MHz", "199.99", "Componentes", "40", ""},
+            {"Samsung 990 PRO SSD", "SSD NVMe 2TB de alta velocidad", "179.99", "Componentes", "35", ""},
+            {"ASUS ROG Strix B650E", "Placa base AMD AM5 con WiFi 6E", "349.99", "Componentes", "20", ""},
+            {"Corsair RM850x", "Fuente de alimentación 850W 80 Plus Gold", "149.99", "Componentes", "25", ""},
+            
+            // Consolas
+            {"PlayStation 5", "Consola de videojuegos de nueva generación, 825GB SSD", "499.99", "Consolas", "30", ""},
+            {"PlayStation 5 Digital", "Consola PS5 sin lector de discos, 825GB SSD", "399.99", "Consolas", "25", ""},
+            {"Xbox Series X", "Consola Microsoft con 1TB de almacenamiento SSD", "499.99", "Consolas", "28", ""},
+            {"Xbox Series S", "Consola Microsoft compacta, 512GB SSD", "299.99", "Consolas", "35", ""},
+            {"Nintendo Switch OLED", "Consola portátil con pantalla OLED de 7 pulgadas", "349.99", "Consolas", "40", ""},
+            {"Steam Deck", "Consola portátil para gaming PC, 256GB", "529.99", "Consolas", "15", ""},
+            
+            // Smart Home
+            {"Amazon Echo Dot", "Altavoz inteligente con Alexa, 4ta generación", "49.99", "Smart Home", "60", ""},
+            {"Google Nest Hub", "Pantalla inteligente de 7 pulgadas con Google Assistant", "99.99", "Smart Home", "40", ""},
+            {"Philips Hue Starter Kit", "Kit de iluminación inteligente con 3 bombillas", "199.99", "Smart Home", "30", ""},
+            {"Ring Video Doorbell", "Timbre inteligente con cámara HD y visión nocturna", "99.99", "Smart Home", "25", ""},
+            {"Nest Thermostat", "Termostato inteligente con ahorro de energía", "129.99", "Smart Home", "20", ""},
+            
+            // Accesorios
+            {"Apple Watch Series 9", "Reloj inteligente con GPS, pantalla Always-On", "399.99", "Accesorios", "35", ""},
+            {"Samsung Galaxy Watch 6", "Reloj inteligente con monitor de salud avanzado", "299.99", "Accesorios", "30", ""},
+            {"Logitech MX Master 3S", "Ratón inalámbrico ergonómico para productividad", "99.99", "Accesorios", "45", ""},
+            {"Keychron K8 Pro", "Teclado mecánico inalámbrico con retroiluminación RGB", "119.99", "Accesorios", "25", ""},
+            {"HyperX Cloud Alpha", "Auriculares gaming con sonido surround 7.1", "99.99", "Accesorios", "40", ""},
+            {"Anker PowerBank 20000mAh", "Batería externa de alta capacidad con carga rápida", "49.99", "Accesorios", "50", ""}
         };
         
         for (String[] product : products) {
