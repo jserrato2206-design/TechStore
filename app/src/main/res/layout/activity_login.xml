@@ -99,20 +99,22 @@
                     android:padding="8dp"
                     android:background="?android:attr/selectableItemBackground" />
 
+                <TextView
+                    android:id="@+id/tvRegisterLink"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/no_account"
+                    android:textColor="@color/primary_blue"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:padding="12dp"
+                    android:background="?android:attr/selectableItemBackground" />
+
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/tvRegisterLink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/no_account"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:padding="8dp"
-            android:background="?android:attr/selectableItemBackground" />
 
         <Button
             android:id="@+id/btnBack"
