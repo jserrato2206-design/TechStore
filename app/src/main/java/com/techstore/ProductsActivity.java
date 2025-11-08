@@ -24,6 +24,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     private ProductAdapter adapter;
     private DatabaseHelper dbHelper;
     private int userId;
+    private boolean isAdmin;
     private View layoutEmpty;
     private ImageButton btnAddProduct, btnCart, btnBack;
     private FloatingActionButton fabCart;
@@ -40,6 +41,14 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         loadProducts();
         setupClickListeners();
         updateCartBadge();
+        setupAdminControls();
+    }
+    
+    private void setupAdminControls() {
+        // Ocultar botón de agregar producto si no es admin
+        if (!isAdmin) {
+            btnAddProduct.setVisibility(View.GONE);
+        }
     }
     
     private void initViews() {
@@ -56,11 +65,13 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     private void loadUserId() {
         SharedPreferences prefs = getSharedPreferences("user_session", MODE_PRIVATE);
         userId = prefs.getInt("user_id", -1);
+        String role = prefs.getString("user_role", "user");
+        isAdmin = "admin".equalsIgnoreCase(role);
     }
     
     private void setupRecyclerView() {
         recyclerViewProducts.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ProductAdapter(null, this);
+        adapter = new ProductAdapter(null, this, isAdmin);
         recyclerViewProducts.setAdapter(adapter);
     }
     

@@ -14,7 +14,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
     
     private static final String DATABASE_NAME = "TechStore.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     
     // Tabla Usuarios
     private static final String TABLE_USERS = "users";
@@ -23,6 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COL_USER_EMAIL = "email";
     private static final String COL_USER_PHONE = "phone";
     private static final String COL_USER_PASSWORD = "password";
+    private static final String COL_USER_ROLE = "role";
     
     // Tabla Productos
     private static final String TABLE_PRODUCTS = "products";
@@ -53,8 +54,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COL_USER_NAME + " TEXT NOT NULL, " +
                 COL_USER_EMAIL + " TEXT UNIQUE NOT NULL, " +
                 COL_USER_PHONE + " TEXT NOT NULL, " +
-                COL_USER_PASSWORD + " TEXT NOT NULL)";
+                COL_USER_PASSWORD + " TEXT NOT NULL, " +
+                COL_USER_ROLE + " TEXT NOT NULL DEFAULT 'user')";
         db.execSQL(createUsersTable);
+        
+        // Crear usuario administrador por defecto
+        ContentValues adminValues = new ContentValues();
+        adminValues.put(COL_USER_NAME, "Administrador");
+        adminValues.put(COL_USER_EMAIL, "admin@techstore.com");
+        adminValues.put(COL_USER_PHONE, "0000000000");
+        adminValues.put(COL_USER_PASSWORD, "admin123");
+        adminValues.put(COL_USER_ROLE, "admin");
+        db.insert(TABLE_USERS, null, adminValues);
         
         // Crear tabla de productos
         String createProductsTable = "CREATE TABLE " + TABLE_PRODUCTS + " (" +
@@ -83,10 +94,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CART);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
-        onCreate(db);
+        if (oldVersion < 2) {
+            // Agregar columna role si no existe
+            try {
+                db.execSQL("ALTER TABLE " + TABLE_USERS + " ADD COLUMN " + COL_USER_ROLE + " TEXT NOT NULL DEFAULT 'user'");
+                
+                // Crear usuario admin si no existe
+                Cursor cursor = db.query(TABLE_USERS, null, COL_USER_EMAIL + "=?", 
+                        new String[]{"admin@techstore.com"}, null, null, null);
+                if (!cursor.moveToFirst()) {
+                    ContentValues adminValues = new ContentValues();
+                    adminValues.put(COL_USER_NAME, "Administrador");
+                    adminValues.put(COL_USER_EMAIL, "admin@techstore.com");
+                    adminValues.put(COL_USER_PHONE, "0000000000");
+                    adminValues.put(COL_USER_PASSWORD, "admin123");
+                    adminValues.put(COL_USER_ROLE, "admin");
+                    db.insert(TABLE_USERS, null, adminValues);
+                }
+                cursor.close();
+            } catch (Exception e) {
+                // Si falla, recrear la tabla
+                db.execSQL("DROP TABLE IF EXISTS " + TABLE_CART);
+                db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
+                db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+                onCreate(db);
+            }
+        }
     }
     
     // ========== OPERACIONES DE USUARIOS ==========
@@ -98,6 +131,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_USER_EMAIL, user.getEmail());
         values.put(COL_USER_PHONE, user.getPhone());
         values.put(COL_USER_PASSWORD, user.getPassword());
+        values.put(COL_USER_ROLE, user.getRole() != null ? user.getRole() : "user");
         long id = db.insert(TABLE_USERS, null, values);
         db.close();
         return id;
@@ -110,12 +144,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         
         User user = null;
         if (cursor.moveToFirst()) {
+            int roleIndex = cursor.getColumnIndex(COL_USER_ROLE);
+            String role = roleIndex >= 0 ? cursor.getString(roleIndex) : "user";
             user = new User(
                     cursor.getInt(cursor.getColumnIndex(COL_USER_ID)),
                     cursor.getString(cursor.getColumnIndex(COL_USER_NAME)),
                     cursor.getString(cursor.getColumnIndex(COL_USER_EMAIL)),
                     cursor.getString(cursor.getColumnIndex(COL_USER_PHONE)),
-                    cursor.getString(cursor.getColumnIndex(COL_USER_PASSWORD))
+                    cursor.getString(cursor.getColumnIndex(COL_USER_PASSWORD)),
+                    role
             );
         }
         cursor.close();

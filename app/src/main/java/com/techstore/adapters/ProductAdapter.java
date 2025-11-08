@@ -15,6 +15,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     
     private List<Product> products;
     private OnProductClickListener listener;
+    private boolean isAdmin;
     
     public interface OnProductClickListener {
         void onProductClick(Product product);
@@ -26,6 +27,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public ProductAdapter(List<Product> products, OnProductClickListener listener) {
         this.products = products;
         this.listener = listener;
+        this.isAdmin = false;
+    }
+    
+    public ProductAdapter(List<Product> products, OnProductClickListener listener, boolean isAdmin) {
+        this.products = products;
+        this.listener = listener;
+        this.isAdmin = isAdmin;
     }
     
     @NonNull
@@ -80,6 +88,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             tvProductPrice.setText(product.getFormattedPrice());
             tvProductCategory.setText(product.getCategory());
             tvProductStock.setText("Stock: " + product.getStock());
+            
+            // Ocultar botones de editar y eliminar si no es admin
+            if (!isAdmin) {
+                btnEdit.setVisibility(View.GONE);
+                btnDelete.setVisibility(View.GONE);
+            } else {
+                btnEdit.setVisibility(View.VISIBLE);
+                btnDelete.setVisibility(View.VISIBLE);
+            }
             
             itemView.setOnClickListener(v -> {
                 if (listener != null) {

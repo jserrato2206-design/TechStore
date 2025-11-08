@@ -6,8 +6,10 @@ public class User {
     private String email;
     private String phone;
     private String password;
+    private String role;
     
     public User() {
+        this.role = "user";
     }
     
     public User(int id, String name, String email, String phone, String password) {
@@ -16,6 +18,16 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.password = password;
+        this.role = "user";
+    }
+    
+    public User(int id, String name, String email, String phone, String password, String role) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.role = role != null ? role : "user";
     }
     
     // Getters y Setters
@@ -57,5 +69,17 @@ public class User {
     
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    public String getRole() {
+        return role != null ? role : "user";
+    }
+    
+    public void setRole(String role) {
+        this.role = role != null ? role : "user";
+    }
+    
+    public boolean isAdmin() {
+        return "admin".equalsIgnoreCase(getRole());
     }
 }

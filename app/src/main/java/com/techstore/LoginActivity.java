@@ -113,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString("user_name", user.getName());
             editor.putString("user_email", user.getEmail());
             editor.putString("user_phone", user.getPhone());
+            editor.putString("user_role", user.getRole());
             editor.putBoolean("is_logged_in", true);
             editor.apply();
         }
