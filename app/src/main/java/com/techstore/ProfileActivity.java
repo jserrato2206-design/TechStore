@@ -61,11 +61,13 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         btnMyOrders.setOnClickListener(v -> {
-            Toast.makeText(this, "Funcionalidad de Mis Pedidos próximamente", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(ProfileActivity.this, ProductsActivity.class);
+            startActivity(intent);
         });
 
         btnFavorites.setOnClickListener(v -> {
-            Toast.makeText(this, "Funcionalidad de Favoritos próximamente", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(ProfileActivity.this, CartActivity.class);
+            startActivity(intent);
         });
 
         btnLogout.setOnClickListener(v -> {

@@ -11,12 +11,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import com.techstore.database.DatabaseHelper;
+import com.techstore.models.User;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText etName, etEmail, etPhone, etPassword, etConfirmPassword;
     private Button btnRegister, btnBack;
     private TextView tvLoginLink;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         btnBack = findViewById(R.id.btnBack);
         tvLoginLink = findViewById(R.id.tvLoginLink);
+        dbHelper = new DatabaseHelper(this);
     }
 
     private void setupClickListeners() {
@@ -61,15 +65,29 @@ public class RegisterActivity extends AppCompatActivity {
         String confirmPassword = etConfirmPassword.getText().toString().trim();
 
         if (validateInputs(name, email, phone, password, confirmPassword)) {
-            saveUserData(name, email, phone);
-            Toast.makeText(this, getString(R.string.register_success), Toast.LENGTH_SHORT).show();
+            // Verificar si el email ya existe
+            if (dbHelper.getUserByEmail(email) != null) {
+                etEmail.setError("Este email ya está registrado");
+                return;
+            }
             
-            Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);
-            intent.putExtra("user_name", name);
-            intent.putExtra("user_email", email);
-            intent.putExtra("user_phone", phone);
-            startActivity(intent);
-            finish();
+            User user = new User();
+            user.setName(name);
+            user.setEmail(email);
+            user.setPhone(phone);
+            user.setPassword(password);
+            
+            long userId = dbHelper.insertUser(user);
+            if (userId > 0) {
+                saveUserSession(user);
+                Toast.makeText(this, getString(R.string.register_success), Toast.LENGTH_SHORT).show();
+                
+                Intent intent = new Intent(RegisterActivity.this, ProductsActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(this, "Error al registrar usuario", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -113,12 +131,13 @@ public class RegisterActivity extends AppCompatActivity {
         return isValid;
     }
 
-    private void saveUserData(String name, String email, String phone) {
+    private void saveUserSession(User user) {
         SharedPreferences prefs = getSharedPreferences("user_session", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("user_name", name);
-        editor.putString("user_email", email);
-        editor.putString("user_phone", phone);
+        editor.putInt("user_id", (int) user.getId());
+        editor.putString("user_name", user.getName());
+        editor.putString("user_email", user.getEmail());
+        editor.putString("user_phone", user.getPhone());
         editor.putBoolean("is_logged_in", true);
         editor.apply();
     }

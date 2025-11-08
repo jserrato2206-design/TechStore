@@ -11,12 +11,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import com.techstore.database.DatabaseHelper;
+import com.techstore.models.User;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
     private Button btnLogin, btnBack;
     private TextView tvRegisterLink, tvForgotPassword;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         tvRegisterLink = findViewById(R.id.tvRegisterLink);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
+        dbHelper = new DatabaseHelper(this);
     }
 
     private void setupClickListeners() {
@@ -65,8 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                 saveUserSession(email);
                 Toast.makeText(this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
                 
-                Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
-                intent.putExtra("user_email", email);
+                Intent intent = new Intent(LoginActivity.this, ProductsActivity.class);
                 startActivity(intent);
                 finish();
             } else {
@@ -98,27 +101,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean authenticateUser(String email, String password) {
-        // Simulación de autenticación
-        // Credenciales predefinidas: admin@tienda.com / 123456
-        // También acepta cualquier email que contenga @ para usuarios registrados
-        if (email.equals("admin@tienda.com") && password.equals("123456")) {
-            return true;
-        }
-        
-        // Para usuarios registrados (simulación)
-        if (email.contains("@") && password.length() >= 6) {
-            // En una app real, aquí verificarías en la base de datos
-            return true;
-        }
-        
-        return false;
+        return dbHelper.validateUser(email, password);
     }
 
     private void saveUserSession(String email) {
-        SharedPreferences prefs = getSharedPreferences("user_session", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("user_email", email);
-        editor.putBoolean("is_logged_in", true);
-        editor.apply();
+        User user = dbHelper.getUserByEmail(email);
+        if (user != null) {
+            SharedPreferences prefs = getSharedPreferences("user_session", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("user_id", user.getId());
+            editor.putString("user_name", user.getName());
+            editor.putString("user_email", user.getEmail());
+            editor.putString("user_phone", user.getPhone());
+            editor.putBoolean("is_logged_in", true);
+            editor.apply();
+        }
     }
 }

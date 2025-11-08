@@ -8,17 +8,28 @@ TechStore es una aplicación móvil nativa para Android que simula una tienda on
 ### Pantallas Principales
 - **Splash Screen**: Pantalla de carga con logo y animaciones
 - **Pantalla de Bienvenida**: Punto de entrada con opciones de navegación
-- **Login**: Autenticación de usuarios con validaciones
-- **Registro**: Formulario de registro completo con validaciones
+- **Login**: Autenticación de usuarios con base de datos SQLite
+- **Registro**: Formulario de registro completo con validaciones y almacenamiento en BD
+- **Recuperación de Contraseña**: Sistema de recuperación
+- **Listado de Productos**: RecyclerView con catálogo completo
+- **Formulario de Productos**: Crear y editar productos (CRUD)
+- **Detalle de Producto**: Vista detallada de cada producto
+- **Carrito de Compras**: Gestión completa del carrito con persistencia
 - **Perfil de Usuario**: Información del usuario y acciones rápidas
 
 ### Funcionalidades
+- ✅ Base de datos SQLite con 3 tablas (users, products, cart)
+- ✅ CRUD completo de productos (Create, Read, Update, Delete)
+- ✅ RecyclerView para listado eficiente de productos
+- ✅ Carrito de compras con persistencia en base de datos
+- ✅ Sistema de autenticación con validación en BD
+- ✅ Registro de usuarios con validación de email único
 - ✅ Navegación fluida entre pantallas
-- ✅ Validaciones de formularios
-- ✅ Autenticación simulada
+- ✅ Validaciones completas de formularios
 - ✅ Persistencia de sesión de usuario
 - ✅ Diseño responsivo con Material Design 3
 - ✅ Gradientes y animaciones personalizadas
+- ✅ 12 productos de ejemplo precargados
 
 ## Estructura del Proyecto
 
@@ -26,18 +37,40 @@ TechStore es una aplicación móvil nativa para Android que simula una tienda on
 app/
 ├── src/main/
 │   ├── java/com/techstore/
-│   │   ├── SplashActivity.java
-│   │   ├── WelcomeActivity.java
-│   │   ├── LoginActivity.java
-│   │   ├── RegisterActivity.java
-│   │   └── ProfileActivity.java
+│   │   ├── activities/
+│   │   │   ├── SplashActivity.java
+│   │   │   ├── WelcomeActivity.java
+│   │   │   ├── LoginActivity.java
+│   │   │   ├── RegisterActivity.java
+│   │   │   ├── ForgotPasswordActivity.java
+│   │   │   ├── ProductsActivity.java
+│   │   │   ├── ProductFormActivity.java
+│   │   │   ├── ProductDetailActivity.java
+│   │   │   ├── CartActivity.java
+│   │   │   └── ProfileActivity.java
+│   │   ├── database/
+│   │   │   └── DatabaseHelper.java
+│   │   ├── models/
+│   │   │   ├── User.java
+│   │   │   ├── Product.java
+│   │   │   └── CartItem.java
+│   │   └── adapters/
+│   │       ├── ProductAdapter.java
+│   │       └── CartAdapter.java
 │   ├── res/
 │   │   ├── layout/
 │   │   │   ├── activity_splash.xml
 │   │   │   ├── activity_welcome.xml
 │   │   │   ├── activity_login.xml
 │   │   │   ├── activity_register.xml
-│   │   │   └── activity_profile.xml
+│   │   │   ├── activity_forgot_password.xml
+│   │   │   ├── activity_products.xml
+│   │   │   ├── activity_product_form.xml
+│   │   │   ├── activity_product_detail.xml
+│   │   │   ├── activity_cart.xml
+│   │   │   ├── activity_profile.xml
+│   │   │   ├── item_product.xml
+│   │   │   └── item_cart.xml
 │   │   ├── values/
 │   │   │   ├── strings.xml
 │   │   │   ├── colors.xml
@@ -81,11 +114,27 @@ app/
    - Conectar un dispositivo Android o iniciar un emulador
    - Hacer clic en el botón "Run" (▶️) en Android Studio
 
+## Base de Datos
+
+### Estructura
+- **Tabla users**: Almacena información de usuarios registrados
+- **Tabla products**: Catálogo de productos tecnológicos
+- **Tabla cart**: Items del carrito de compras por usuario
+
+### Productos de Ejemplo
+La base de datos se inicializa automáticamente con 12 productos de ejemplo en diferentes categorías:
+- Smartphones (iPhone 15 Pro, Samsung Galaxy S24)
+- Laptops (MacBook Pro M3, Dell XPS 15)
+- Tablets (iPad Air, Samsung Galaxy Tab S9)
+- Audio (AirPods Pro, Sony WH-1000XM5)
+- Componentes (NVIDIA RTX 4090, AMD Ryzen 9 7950X)
+- Consolas (PlayStation 5, Xbox Series X)
+
 ## Credenciales de Prueba
 
-Para probar la funcionalidad de login, usar las siguientes credenciales:
-- **Email**: admin@tienda.com
-- **Contraseña**: 123456
+Para probar la funcionalidad, puedes:
+1. **Registrarte** con cualquier email válido
+2. **O usar un usuario existente** después del primer registro
 
 ## Características Técnicas
 
@@ -107,14 +156,32 @@ Para probar la funcionalidad de login, usar las siguientes credenciales:
 - ✅ Confirmación de contraseña
 - ✅ Validación de teléfono
 
+## Funcionalidades CRUD
+
+### Productos
+- ✅ **Create**: Agregar nuevos productos al catálogo
+- ✅ **Read**: Ver lista completa de productos en RecyclerView
+- ✅ **Update**: Editar información de productos existentes
+- ✅ **Delete**: Eliminar productos del catálogo
+
+### Carrito de Compras
+- ✅ Agregar productos al carrito
+- ✅ Ver items del carrito con RecyclerView
+- ✅ Modificar cantidades
+- ✅ Eliminar items individuales
+- ✅ Vaciar carrito completo
+- ✅ Calcular total automáticamente
+- ✅ Realizar compra (simulación)
+
 ## Próximas Funcionalidades
 
-- [ ] Catálogo de productos
-- [ ] Carrito de compras
-- [ ] Sistema de búsqueda y filtros
+- [ ] Sistema de búsqueda y filtros por categoría
 - [ ] Integración con APIs reales
 - [ ] Notificaciones push
 - [ ] Sistema de reviews y calificaciones
+- [ ] Historial de compras
+- [ ] Sistema de favoritos
+- [ ] Integración con métodos de pago
 
 ## Contribución
 
