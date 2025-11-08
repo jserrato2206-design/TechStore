@@ -155,6 +155,14 @@
         </androidx.cardview.widget.CardView>
 
         <Button
+            android:id="@+id/btnGoToStore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/go_to_store"
+            style="@style/ButtonPrimary" />
+
+        <Button
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

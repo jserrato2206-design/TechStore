@@ -13,7 +13,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private TextView tvUserName, tvUserEmail, tvUserPhone, tvWelcome;
     private TextView btnMyOrders, btnFavorites;
-    private Button btnLogout, btnBack;
+    private Button btnGoToStore, btnLogout, btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +32,7 @@ public class ProfileActivity extends AppCompatActivity {
         tvWelcome = findViewById(R.id.tvWelcome);
         btnMyOrders = findViewById(R.id.btnMyOrders);
         btnFavorites = findViewById(R.id.btnFavorites);
+        btnGoToStore = findViewById(R.id.btnGoToStore);
         btnLogout = findViewById(R.id.btnLogout);
         btnBack = findViewById(R.id.btnBack);
     }
@@ -61,6 +62,11 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
+        btnGoToStore.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileActivity.this, ProductsActivity.class);
+            startActivity(intent);
+        });
+
         btnMyOrders.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, ProductsActivity.class);
             startActivity(intent);
