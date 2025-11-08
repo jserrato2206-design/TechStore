@@ -12,7 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class ProfileActivity extends AppCompatActivity {
 
     private TextView tvUserName, tvUserEmail, tvUserPhone, tvWelcome;
-    private Button btnMyOrders, btnFavorites, btnLogout, btnBack;
+    private TextView btnMyOrders, btnFavorites;
+    private Button btnLogout, btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
