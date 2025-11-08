@@ -508,13 +508,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         
         if (cursor.moveToFirst()) {
             do {
+                int imageIndex = cursor.getColumnIndex(COL_PRODUCT_IMAGE);
+                String image = imageIndex >= 0 ? cursor.getString(imageIndex) : "";
                 Product product = new Product(
                         cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_ID)),
                         cursor.getString(cursor.getColumnIndex(COL_PRODUCT_NAME)),
                         cursor.getString(cursor.getColumnIndex(COL_PRODUCT_DESCRIPTION)),
                         cursor.getDouble(cursor.getColumnIndex(COL_PRODUCT_PRICE)),
                         cursor.getString(cursor.getColumnIndex(COL_PRODUCT_CATEGORY)),
-                        cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_STOCK))
+                        cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_STOCK)),
+                        image
                 );
                 products.add(product);
             } while (cursor.moveToNext());
@@ -533,13 +536,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         
         if (cursor.moveToFirst()) {
             do {
+                int imageIndex = cursor.getColumnIndex(COL_PRODUCT_IMAGE);
+                String image = imageIndex >= 0 ? cursor.getString(imageIndex) : "";
                 Product product = new Product(
                         cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_ID)),
                         cursor.getString(cursor.getColumnIndex(COL_PRODUCT_NAME)),
                         cursor.getString(cursor.getColumnIndex(COL_PRODUCT_DESCRIPTION)),
                         cursor.getDouble(cursor.getColumnIndex(COL_PRODUCT_PRICE)),
                         cursor.getString(cursor.getColumnIndex(COL_PRODUCT_CATEGORY)),
-                        cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_STOCK))
+                        cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_STOCK)),
+                        image
                 );
                 products.add(product);
             } while (cursor.moveToNext());
@@ -663,13 +669,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         
         if (cursor.moveToFirst()) {
             do {
+                int imageIndex = cursor.getColumnIndex(COL_PRODUCT_IMAGE);
+                String image = imageIndex >= 0 ? cursor.getString(imageIndex) : "";
                 Product product = new Product(
                         cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_ID)),
                         cursor.getString(cursor.getColumnIndex(COL_PRODUCT_NAME)),
                         cursor.getString(cursor.getColumnIndex(COL_PRODUCT_DESCRIPTION)),
                         cursor.getDouble(cursor.getColumnIndex(COL_PRODUCT_PRICE)),
                         cursor.getString(cursor.getColumnIndex(COL_PRODUCT_CATEGORY)),
-                        cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_STOCK))
+                        cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_STOCK)),
+                        image
                 );
                 products.add(product);
             } while (cursor.moveToNext());
