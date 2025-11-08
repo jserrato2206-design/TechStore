@@ -24,6 +24,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
     private int userId;
     private TextView tvTotal, tvEmpty;
     private Button btnCheckout, btnClearCart;
+    private ImageButton btnBack;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
         tvEmpty = findViewById(R.id.tvEmpty);
         btnCheckout = findViewById(R.id.btnCheckout);
         btnClearCart = findViewById(R.id.btnClearCart);
+        btnBack = findViewById(R.id.btnBack);
         dbHelper = new DatabaseHelper(this);
     }
     
@@ -86,6 +88,10 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
     }
     
     private void setupClickListeners() {
+        btnBack.setOnClickListener(v -> {
+            finish();
+        });
+        
         btnCheckout.setOnClickListener(v -> {
             new AlertDialog.Builder(this)
                     .setTitle("Confirmar Compra")

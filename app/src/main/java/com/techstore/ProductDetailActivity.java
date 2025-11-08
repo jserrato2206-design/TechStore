@@ -15,6 +15,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TextView tvProductName, tvProductDescription, tvProductPrice, 
                      tvProductCategory, tvProductStock;
     private Button btnAddToCart;
+    private ImageButton btnBack;
     private DatabaseHelper dbHelper;
     private Product product;
     private int userId;
@@ -45,6 +46,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvProductCategory = findViewById(R.id.tvProductCategory);
         tvProductStock = findViewById(R.id.tvProductStock);
         btnAddToCart = findViewById(R.id.btnAddToCart);
+        btnBack = findViewById(R.id.btnBack);
         dbHelper = new DatabaseHelper(this);
     }
     
@@ -70,6 +72,10 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
     
     private void setupClickListeners() {
+        btnBack.setOnClickListener(v -> {
+            finish();
+        });
+        
         btnAddToCart.setOnClickListener(v -> {
             if (userId == -1) {
                 Toast.makeText(this, "Debes iniciar sesión primero", Toast.LENGTH_SHORT).show();

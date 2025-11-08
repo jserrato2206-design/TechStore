@@ -23,7 +23,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     private DatabaseHelper dbHelper;
     private int userId;
     private TextView tvEmpty;
-    private ImageButton btnAddProduct, btnCart;
+    private ImageButton btnAddProduct, btnCart, btnBack;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +42,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         tvEmpty = findViewById(R.id.tvEmpty);
         btnAddProduct = findViewById(R.id.btnAddProduct);
         btnCart = findViewById(R.id.btnCart);
+        btnBack = findViewById(R.id.btnBack);
         dbHelper = new DatabaseHelper(this);
     }
     
@@ -70,6 +71,12 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     }
     
     private void setupClickListeners() {
+        btnBack.setOnClickListener(v -> {
+            Intent intent = new Intent(ProductsActivity.this, ProfileActivity.class);
+            startActivity(intent);
+            finish();
+        });
+        
         btnAddProduct.setOnClickListener(v -> {
             Intent intent = new Intent(ProductsActivity.this, ProductFormActivity.class);
             startActivityForResult(intent, 100);

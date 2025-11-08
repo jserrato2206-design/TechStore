@@ -79,10 +79,11 @@ public class RegisterActivity extends AppCompatActivity {
             
             long userId = dbHelper.insertUser(user);
             if (userId > 0) {
+                user.setId((int) userId);
                 saveUserSession(user);
                 Toast.makeText(this, getString(R.string.register_success), Toast.LENGTH_SHORT).show();
                 
-                Intent intent = new Intent(RegisterActivity.this, ProductsActivity.class);
+                Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);
                 startActivity(intent);
                 finish();
             } else {

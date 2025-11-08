@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                 saveUserSession(email);
                 Toast.makeText(this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
                 
-                Intent intent = new Intent(LoginActivity.this, ProductsActivity.class);
+                Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
                 startActivity(intent);
                 finish();
             } else {

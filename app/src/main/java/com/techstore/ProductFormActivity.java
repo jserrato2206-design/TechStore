@@ -15,6 +15,7 @@ public class ProductFormActivity extends AppCompatActivity {
     private EditText etProductName, etProductDescription, etProductPrice, 
                      etProductCategory, etProductStock;
     private Button btnSave;
+    private ImageButton btnBack;
     private DatabaseHelper dbHelper;
     private int productId = -1;
     
@@ -42,6 +43,7 @@ public class ProductFormActivity extends AppCompatActivity {
         etProductCategory = findViewById(R.id.etProductCategory);
         etProductStock = findViewById(R.id.etProductStock);
         btnSave = findViewById(R.id.btnSave);
+        btnBack = findViewById(R.id.btnBack);
     }
     
     private void loadProduct() {
@@ -57,6 +59,10 @@ public class ProductFormActivity extends AppCompatActivity {
     }
     
     private void setupClickListeners() {
+        btnBack.setOnClickListener(v -> {
+            finish();
+        });
+        
         btnSave.setOnClickListener(v -> saveProduct());
     }
     
