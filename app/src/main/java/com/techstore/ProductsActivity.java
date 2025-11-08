@@ -22,7 +22,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     private ProductAdapter adapter;
     private DatabaseHelper dbHelper;
     private int userId;
-    private TextView tvEmpty;
+    private View layoutEmpty;
     private ImageButton btnAddProduct, btnCart, btnBack;
     
     @Override
@@ -39,7 +39,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     
     private void initViews() {
         recyclerViewProducts = findViewById(R.id.recyclerViewProducts);
-        tvEmpty = findViewById(R.id.tvEmpty);
+        layoutEmpty = findViewById(R.id.layoutEmpty);
         btnAddProduct = findViewById(R.id.btnAddProduct);
         btnCart = findViewById(R.id.btnCart);
         btnBack = findViewById(R.id.btnBack);
@@ -62,10 +62,10 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         adapter.updateProducts(products);
         
         if (products.isEmpty()) {
-            tvEmpty.setVisibility(View.VISIBLE);
+            layoutEmpty.setVisibility(View.VISIBLE);
             recyclerViewProducts.setVisibility(View.GONE);
         } else {
-            tvEmpty.setVisibility(View.GONE);
+            layoutEmpty.setVisibility(View.GONE);
             recyclerViewProducts.setVisibility(View.VISIBLE);
         }
     }
