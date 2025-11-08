@@ -35,4 +35,9 @@
     <string name="user_not_found">Usuario no encontrado</string>
     <string name="invalid_user">Usuario inválido</string>
     <string name="go_to_store">🛒 Ir a la Tienda</string>
+    <string name="pay_now">💳 Pagar Ahora</string>
+    <string name="confirm_purchase">Confirmar Compra</string>
+    <string name="purchase_summary">Resumen de compra</string>
+    <string name="items">Productos</string>
+    <string name="total">Total</string>
 </resources>

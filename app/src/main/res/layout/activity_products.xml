@@ -47,7 +47,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
-            android:src="@android:drawable/ic_menu_view"
+            android:src="@android:drawable/ic_menu_shopping_cart"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="Ver carrito"
             android:tint="@color/white" />
@@ -60,6 +60,38 @@
         android:layout_height="match_parent"
         android:padding="8dp"
         android:clipToPadding="false" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_shopping_cart"
+            app:tint="@color/white"
+            app:backgroundTint="@color/primary_blue"
+            app:elevation="8dp" />
+
+        <TextView
+            android:id="@+id/tvCartBadge"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="-8dp"
+            android:layout_marginEnd="-8dp"
+            android:background="@drawable/badge_background"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/layoutEmpty"

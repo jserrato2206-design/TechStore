@@ -23,7 +23,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
     private CartAdapter adapter;
     private DatabaseHelper dbHelper;
     private int userId;
-    private TextView tvTotal, tvEmpty;
+    private TextView tvTotal, tvItemCount, tvEmpty;
     private Button btnCheckout, btnClearCart;
     private ImageButton btnBack;
     
@@ -42,6 +42,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
     private void initViews() {
         recyclerViewCart = findViewById(R.id.recyclerViewCart);
         tvTotal = findViewById(R.id.tvTotal);
+        tvItemCount = findViewById(R.id.tvItemCount);
         tvEmpty = findViewById(R.id.tvEmpty);
         btnCheckout = findViewById(R.id.btnCheckout);
         btnClearCart = findViewById(R.id.btnClearCart);
@@ -84,8 +85,12 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
     }
     
     private void updateTotal() {
+        List<CartItem> items = dbHelper.getCartItems(userId);
         double total = dbHelper.getCartTotal(userId);
+        int itemCount = items.size();
+        
         tvTotal.setText(String.format("$%.2f", total));
+        tvItemCount.setText(itemCount + (itemCount == 1 ? " producto" : " productos"));
     }
     
     private void setupClickListeners() {
@@ -94,12 +99,26 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
         });
         
         btnCheckout.setOnClickListener(v -> {
+            List<CartItem> items = dbHelper.getCartItems(userId);
+            if (items.isEmpty()) {
+                Toast.makeText(this, "Tu carrito está vacío", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            double total = dbHelper.getCartTotal(userId);
+            int itemCount = items.size();
+            
+            String message = "Resumen de compra:\n\n" +
+                    "Productos: " + itemCount + "\n" +
+                    "Total: $" + String.format("%.2f", total) + "\n\n" +
+                    "¿Deseas confirmar la compra?";
+            
             new AlertDialog.Builder(this)
-                    .setTitle("Confirmar Compra")
-                    .setMessage("¿Deseas realizar la compra?")
-                    .setPositiveButton("Confirmar", (dialog, which) -> {
+                    .setTitle("💳 Confirmar Compra")
+                    .setMessage(message)
+                    .setPositiveButton("Pagar", (dialog, which) -> {
                         dbHelper.clearCart(userId);
-                        Toast.makeText(this, "¡Compra realizada exitosamente!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "¡Compra realizada exitosamente! Total pagado: $" + String.format("%.2f", total), Toast.LENGTH_LONG).show();
                         finish();
                     })
                     .setNegativeButton("Cancelar", null)

@@ -11,8 +11,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.techstore.adapters.ProductAdapter;
 import com.techstore.database.DatabaseHelper;
+import com.techstore.models.CartItem;
 import com.techstore.models.Product;
 import java.util.List;
 
@@ -24,6 +26,8 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     private int userId;
     private View layoutEmpty;
     private ImageButton btnAddProduct, btnCart, btnBack;
+    private FloatingActionButton fabCart;
+    private TextView tvCartBadge;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         setupRecyclerView();
         loadProducts();
         setupClickListeners();
+        updateCartBadge();
     }
     
     private void initViews() {
@@ -43,6 +48,8 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         btnAddProduct = findViewById(R.id.btnAddProduct);
         btnCart = findViewById(R.id.btnCart);
         btnBack = findViewById(R.id.btnBack);
+        fabCart = findViewById(R.id.fabCart);
+        tvCartBadge = findViewById(R.id.tvCartBadge);
         dbHelper = new DatabaseHelper(this);
     }
     
@@ -82,10 +89,31 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
             startActivityForResult(intent, 100);
         });
         
-        btnCart.setOnClickListener(v -> {
-            Intent intent = new Intent(ProductsActivity.this, CartActivity.class);
-            startActivity(intent);
-        });
+        btnCart.setOnClickListener(v -> openCart());
+        
+        fabCart.setOnClickListener(v -> openCart());
+    }
+    
+    private void openCart() {
+        if (userId == -1) {
+            Toast.makeText(this, "Debes iniciar sesión primero", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent intent = new Intent(ProductsActivity.this, CartActivity.class);
+        startActivity(intent);
+    }
+    
+    private void updateCartBadge() {
+        if (userId != -1) {
+            List<CartItem> cartItems = dbHelper.getCartItems(userId);
+            int itemCount = cartItems.size();
+            if (itemCount > 0) {
+                tvCartBadge.setText(String.valueOf(itemCount));
+                tvCartBadge.setVisibility(View.VISIBLE);
+            } else {
+                tvCartBadge.setVisibility(View.GONE);
+            }
+        }
     }
     
     @Override
@@ -118,6 +146,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         
         dbHelper.addToCart(userId, product.getId(), 1);
         Toast.makeText(this, "Producto agregado al carrito", Toast.LENGTH_SHORT).show();
+        updateCartBadge();
     }
     
     @Override
@@ -145,5 +174,6 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     protected void onResume() {
         super.onResume();
         loadProducts();
+        updateCartBadge();
     }
 }
