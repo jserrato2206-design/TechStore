@@ -40,4 +40,15 @@
     <string name="purchase_summary">Resumen de compra</string>
     <string name="items">Productos</string>
     <string name="total">Total</string>
+    <string name="edit_profile">Editar Perfil</string>
+    <string name="delete_account">Eliminar Cuenta</string>
+    <string name="my_location">Mi Ubicación</string>
+    <string name="store_locations">Ubicaciones de Tiendas</string>
+    <string name="take_photo">Tomar Foto</string>
+    <string name="pick_image">Seleccionar Imagen</string>
+    <string name="save_changes">Guardar Cambios</string>
+    <string name="latitude">Latitud</string>
+    <string name="longitude">Longitud</string>
+    <string name="address">Dirección</string>
+    <string name="product_image">Imagen del Producto</string>
 </resources>

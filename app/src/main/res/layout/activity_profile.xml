@@ -155,12 +155,28 @@
         </androidx.cardview.widget.CardView>
 
         <Button
+            android:id="@+id/btnEditProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Editar Perfil"
+            style="@style/ButtonPrimary" />
+
+        <Button
             android:id="@+id/btnGoToStore"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:text="@string/go_to_store"
             style="@style/ButtonPrimary" />
+
+        <Button
+            android:id="@+id/btnDeleteAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Eliminar Cuenta"
+            style="@style/ButtonDanger" />
 
         <Button
             android:id="@+id/btnLogout"

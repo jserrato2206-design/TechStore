@@ -7,13 +7,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import com.techstore.database.DatabaseHelper;
 
 public class ProfileActivity extends AppCompatActivity {
 
     private TextView tvUserName, tvUserEmail, tvUserPhone, tvWelcome;
     private TextView btnMyOrders, btnFavorites;
-    private Button btnGoToStore, btnLogout, btnBack;
+    private Button btnGoToStore, btnLogout, btnBack, btnEditProfile, btnDeleteAccount;
+    private DatabaseHelper dbHelper;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +39,15 @@ public class ProfileActivity extends AppCompatActivity {
         btnGoToStore = findViewById(R.id.btnGoToStore);
         btnLogout = findViewById(R.id.btnLogout);
         btnBack = findViewById(R.id.btnBack);
+        btnEditProfile = findViewById(R.id.btnEditProfile);
+        btnDeleteAccount = findViewById(R.id.btnDeleteAccount);
+        dbHelper = new DatabaseHelper(this);
     }
 
     private void loadUserData() {
         SharedPreferences prefs = getSharedPreferences("user_session", MODE_PRIVATE);
         
+        userId = prefs.getInt("user_id", -1);
         String name = prefs.getString("user_name", "");
         String email = prefs.getString("user_email", "");
         String phone = prefs.getString("user_phone", "");
@@ -53,6 +61,9 @@ public class ProfileActivity extends AppCompatActivity {
         }
         if (phone.isEmpty() && getIntent().hasExtra("user_phone")) {
             phone = getIntent().getStringExtra("user_phone");
+        }
+        if (userId == -1 && getIntent().hasExtra("user_id")) {
+            userId = getIntent().getIntExtra("user_id", -1);
         }
 
         tvWelcome.setText("¡Bienvenido, " + name + "!");
@@ -92,6 +103,43 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+        
+        btnEditProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
+            intent.putExtra("user_id", userId);
+            startActivityForResult(intent, 100);
+        });
+        
+        btnDeleteAccount.setOnClickListener(v -> {
+            showDeleteConfirmationDialog();
+        });
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+            loadUserData();
+        }
+    }
+    
+    private void showDeleteConfirmationDialog() {
+        new AlertDialog.Builder(this)
+            .setTitle("Eliminar Cuenta")
+            .setMessage("¿Está seguro de que desea eliminar su cuenta? Esta acción no se puede deshacer.")
+            .setPositiveButton("Eliminar", (dialog, which) -> {
+                if (userId != -1) {
+                    dbHelper.deleteUser(userId);
+                    clearUserSession();
+                    Toast.makeText(this, "Cuenta eliminada", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ProfileActivity.this, WelcomeActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+            })
+            .setNegativeButton("Cancelar", null)
+            .show();
     }
 
     private void clearUserSession() {

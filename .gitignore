@@ -99,3 +99,9 @@ Desktop.ini
 
 # Documentation folder (not for GitHub)
 docs/
+
+# Documentation files (except README.md)
+DOCUMENTACION_COMPLEMENTARIA.md
+GUIA_IMPLEMENTACION_FINAL.md
+RESUMEN_IMPLEMENTACION.md
+MANUAL_USUARIO.md

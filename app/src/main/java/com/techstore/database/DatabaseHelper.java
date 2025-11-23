@@ -228,6 +228,60 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return user != null && user.getPassword().equals(password);
     }
     
+    public User getUserById(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_USERS, null, COL_USER_ID + "=?", 
+                new String[]{String.valueOf(userId)}, null, null, null);
+        
+        User user = null;
+        if (cursor.moveToFirst()) {
+            int roleIndex = cursor.getColumnIndex(COL_USER_ROLE);
+            String role = roleIndex >= 0 ? cursor.getString(roleIndex) : "user";
+            user = new User(
+                    cursor.getInt(cursor.getColumnIndex(COL_USER_ID)),
+                    cursor.getString(cursor.getColumnIndex(COL_USER_NAME)),
+                    cursor.getString(cursor.getColumnIndex(COL_USER_EMAIL)),
+                    cursor.getString(cursor.getColumnIndex(COL_USER_PHONE)),
+                    cursor.getString(cursor.getColumnIndex(COL_USER_PASSWORD)),
+                    role
+            );
+        }
+        cursor.close();
+        db.close();
+        return user;
+    }
+    
+    public int updateUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_USER_NAME, user.getName());
+        values.put(COL_USER_EMAIL, user.getEmail());
+        values.put(COL_USER_PHONE, user.getPhone());
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            values.put(COL_USER_PASSWORD, user.getPassword());
+        }
+        if (user.getRole() != null) {
+            values.put(COL_USER_ROLE, user.getRole());
+        }
+        int rowsAffected = db.update(TABLE_USERS, values, COL_USER_ID + "=?", 
+                new String[]{String.valueOf(user.getId())});
+        db.close();
+        return rowsAffected;
+    }
+    
+    public int deleteUser(int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Primero eliminar registros relacionados
+        db.delete(TABLE_CART, COL_CART_USER_ID + "=?", new String[]{String.valueOf(userId)});
+        db.delete(TABLE_ORDERS, COL_ORDER_USER_ID + "=?", new String[]{String.valueOf(userId)});
+        db.delete(TABLE_FAVORITES, COL_FAVORITE_USER_ID + "=?", new String[]{String.valueOf(userId)});
+        // Luego eliminar el usuario
+        int rowsAffected = db.delete(TABLE_USERS, COL_USER_ID + "=?", 
+                new String[]{String.valueOf(userId)});
+        db.close();
+        return rowsAffected;
+    }
+    
     // ========== OPERACIONES DE PRODUCTOS (CRUD) ==========
     
     public long insertProduct(Product product) {
