@@ -33,7 +33,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         if (productId != -1) {
             loadProduct(productId);
         } else {
-            Toast.makeText(this, "Producto no encontrado", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.product_not_found), Toast.LENGTH_SHORT).show();
             finish();
         }
         
@@ -63,11 +63,11 @@ public class ProductDetailActivity extends AppCompatActivity {
             tvProductDescription.setText(product.getDescription());
             tvProductPrice.setText(product.getFormattedPrice());
             tvProductCategory.setText(product.getCategory());
-            tvProductStock.setText("Stock disponible: " + product.getStock());
+            tvProductStock.setText(getString(R.string.stock_available, product.getStock()));
             
             if (product.getStock() <= 0) {
                 btnAddToCart.setEnabled(false);
-                btnAddToCart.setText("Sin Stock");
+                btnAddToCart.setText(getString(R.string.out_of_stock));
             }
         }
     }
@@ -79,13 +79,13 @@ public class ProductDetailActivity extends AppCompatActivity {
         
         btnAddToCart.setOnClickListener(v -> {
             if (userId == -1) {
-                Toast.makeText(this, "Debes iniciar sesión primero", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.login_required), Toast.LENGTH_SHORT).show();
                 return;
             }
             
             if (product != null && product.getStock() > 0) {
                 dbHelper.addToCart(userId, product.getId(), 1);
-                Toast.makeText(this, "Producto agregado al carrito", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.product_added_to_cart), Toast.LENGTH_SHORT).show();
             }
         });
     }

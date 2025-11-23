@@ -51,4 +51,20 @@
     <string name="longitude">Longitud</string>
     <string name="address">Dirección</string>
     <string name="product_image">Imagen del Producto</string>
+    <string name="welcome_user">¡Bienvenido, %1$s!</string>
+    <string name="name_label">Nombre: %1$s</string>
+    <string name="email_label">Email: %1$s</string>
+    <string name="phone_label">Teléfono: %1$s</string>
+    <string name="stock_label">Stock: %1$d</string>
+    <string name="stock_available">Stock disponible: %1$d</string>
+    <string name="session_closed">Sesión cerrada</string>
+    <string name="delete_account_title">Eliminar Cuenta</string>
+    <string name="delete_account_message">¿Está seguro de que desea eliminar su cuenta? Esta acción no se puede deshacer.</string>
+    <string name="delete">Eliminar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="account_deleted">Cuenta eliminada</string>
+    <string name="product_not_found">Producto no encontrado</string>
+    <string name="login_required">Debes iniciar sesión primero</string>
+    <string name="product_added_to_cart">Producto agregado al carrito</string>
+    <string name="out_of_stock">Sin Stock</string>
 </resources>

@@ -66,10 +66,10 @@ public class ProfileActivity extends AppCompatActivity {
             userId = getIntent().getIntExtra("user_id", -1);
         }
 
-        tvWelcome.setText("¡Bienvenido, " + name + "!");
-        tvUserName.setText("Nombre: " + name);
-        tvUserEmail.setText("Email: " + email);
-        tvUserPhone.setText("Teléfono: " + phone);
+        tvWelcome.setText(getString(R.string.welcome_user, name));
+        tvUserName.setText(getString(R.string.name_label, name));
+        tvUserEmail.setText(getString(R.string.email_label, email));
+        tvUserPhone.setText(getString(R.string.phone_label, phone));
     }
 
     private void setupClickListeners() {
@@ -90,7 +90,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         btnLogout.setOnClickListener(v -> {
             clearUserSession();
-            Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.session_closed), Toast.LENGTH_SHORT).show();
             
             Intent intent = new Intent(ProfileActivity.this, WelcomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -125,20 +125,20 @@ public class ProfileActivity extends AppCompatActivity {
     
     private void showDeleteConfirmationDialog() {
         new AlertDialog.Builder(this)
-            .setTitle("Eliminar Cuenta")
-            .setMessage("¿Está seguro de que desea eliminar su cuenta? Esta acción no se puede deshacer.")
-            .setPositiveButton("Eliminar", (dialog, which) -> {
+            .setTitle(getString(R.string.delete_account_title))
+            .setMessage(getString(R.string.delete_account_message))
+            .setPositiveButton(getString(R.string.delete), (dialog, which) -> {
                 if (userId != -1) {
                     dbHelper.deleteUser(userId);
                     clearUserSession();
-                    Toast.makeText(this, "Cuenta eliminada", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.account_deleted), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ProfileActivity.this, WelcomeActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
                 }
             })
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show();
     }
 

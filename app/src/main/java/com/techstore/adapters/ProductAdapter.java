@@ -87,7 +87,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             tvProductDescription.setText(product.getDescription());
             tvProductPrice.setText(product.getFormattedPrice());
             tvProductCategory.setText(product.getCategory());
-            tvProductStock.setText("Stock: " + product.getStock());
+            tvProductStock.setText(itemView.getContext().getString(R.string.stock_label, product.getStock()));
             
             // Ocultar botones de editar y eliminar si no es admin
             if (!isAdmin) {
