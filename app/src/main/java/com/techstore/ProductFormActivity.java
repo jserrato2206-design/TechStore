@@ -49,31 +49,46 @@ public class ProductFormActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_form);
-        
-        initViews();
-        dbHelper = new DatabaseHelper(this);
-        
-        // Verificar si es edición
-        productId = getIntent().getIntExtra("product_id", -1);
-        if (productId != -1) {
-            loadProduct();
+        try {
+            setContentView(R.layout.activity_product_form);
+            
+            initViews();
+            dbHelper = new DatabaseHelper(this);
+            
+            // Verificar si es edición
+            if (getIntent() != null) {
+                productId = getIntent().getIntExtra("product_id", -1);
+                if (productId != -1) {
+                    loadProduct();
+                }
+            }
+            
+            setupClickListeners();
+        } catch (Exception e) {
+            Toast.makeText(this, "Error al iniciar: " + e.getMessage(), 
+                    Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+            finish();
         }
-        
-        setupClickListeners();
     }
     
     private void initViews() {
-        etProductName = findViewById(R.id.etProductName);
-        etProductDescription = findViewById(R.id.etProductDescription);
-        etProductPrice = findViewById(R.id.etProductPrice);
-        etProductCategory = findViewById(R.id.etProductCategory);
-        etProductStock = findViewById(R.id.etProductStock);
-        btnSave = findViewById(R.id.btnSave);
-        btnBack = findViewById(R.id.btnBack);
-        btnTakePhoto = findViewById(R.id.btnTakePhoto);
-        btnPickImage = findViewById(R.id.btnPickImage);
-        ivProductImage = findViewById(R.id.ivProductImage);
+        try {
+            etProductName = findViewById(R.id.etProductName);
+            etProductDescription = findViewById(R.id.etProductDescription);
+            etProductPrice = findViewById(R.id.etProductPrice);
+            etProductCategory = findViewById(R.id.etProductCategory);
+            etProductStock = findViewById(R.id.etProductStock);
+            btnSave = findViewById(R.id.btnSave);
+            btnBack = findViewById(R.id.btnBack);
+            btnTakePhoto = findViewById(R.id.btnTakePhoto);
+            btnPickImage = findViewById(R.id.btnPickImage);
+            ivProductImage = findViewById(R.id.ivProductImage);
+        } catch (Exception e) {
+            Toast.makeText(this, "Error al inicializar vistas: " + e.getMessage(), 
+                    Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
     
     private void loadProduct() {
@@ -96,10 +111,32 @@ public class ProductFormActivity extends AppCompatActivity {
     }
     
     private void setupClickListeners() {
-        btnBack.setOnClickListener(v -> finish());
-        btnSave.setOnClickListener(v -> saveProduct());
-        btnTakePhoto.setOnClickListener(v -> openCamera());
-        btnPickImage.setOnClickListener(v -> openGallery());
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
+        if (btnSave != null) {
+            btnSave.setOnClickListener(v -> saveProduct());
+        }
+        if (btnTakePhoto != null) {
+            btnTakePhoto.setOnClickListener(v -> {
+                try {
+                    openCamera();
+                } catch (Exception e) {
+                    Toast.makeText(this, "Error al abrir cámara: " + e.getMessage(), 
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        if (btnPickImage != null) {
+            btnPickImage.setOnClickListener(v -> {
+                try {
+                    openGallery();
+                } catch (Exception e) {
+                    Toast.makeText(this, "Error al abrir galería: " + e.getMessage(), 
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
     
     private void openCamera() {
