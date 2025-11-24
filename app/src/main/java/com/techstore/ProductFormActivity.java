@@ -115,11 +115,20 @@ public class ProductFormActivity extends AppCompatActivity {
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
             File imageFile = createImageFile();
             if (imageFile != null) {
-                cameraImageUri = FileProvider.getUriForFile(this,
-                        getApplicationContext().getPackageName() + ".fileprovider",
-                        imageFile);
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
-                startActivityForResult(cameraIntent, REQUEST_CAMERA);
+                try {
+                    cameraImageUri = FileProvider.getUriForFile(this,
+                            getApplicationContext().getPackageName() + ".fileprovider",
+                            imageFile);
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
+                    cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    startActivityForResult(cameraIntent, REQUEST_CAMERA);
+                } catch (Exception e) {
+                    Toast.makeText(this, "Error al abrir la cámara: " + e.getMessage(), 
+                            Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Error al crear archivo de imagen", 
+                        Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, getString(R.string.camera_permission_required), 
@@ -154,9 +163,18 @@ public class ProductFormActivity extends AppCompatActivity {
     private File createImageFile() {
         String imageFileName = "product_" + System.currentTimeMillis() + ".jpg";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File imageFile = new File(storageDir, imageFileName);
-        currentImagePath = imageFile.getAbsolutePath();
-        return imageFile;
+        if (storageDir == null) {
+            storageDir = getExternalFilesDir(null);
+        }
+        if (storageDir != null && !storageDir.exists()) {
+            storageDir.mkdirs();
+        }
+        if (storageDir != null) {
+            File imageFile = new File(storageDir, imageFileName);
+            currentImagePath = imageFile.getAbsolutePath();
+            return imageFile;
+        }
+        return null;
     }
     
     @Override
