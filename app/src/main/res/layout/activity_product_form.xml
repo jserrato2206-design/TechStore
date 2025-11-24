@@ -142,51 +142,6 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Sección de Imagen -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/product_image"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_primary"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
-
-                <ImageView
-                    android:id="@+id/ivProductImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginBottom="16dp"
-                    android:scaleType="centerCrop"
-                    android:background="@drawable/card_background"
-                    android:contentDescription="@string/product_image" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="24dp">
-
-                    <Button
-                        android:id="@+id/btnTakePhoto"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        android:text="@string/take_photo"
-                        style="@style/ButtonSecondary" />
-
-                    <Button
-                        android:id="@+id/btnPickImage"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="8dp"
-                        android:text="@string/pick_image"
-                        style="@style/ButtonSecondary" />
-
-                </LinearLayout>
-
                 <Button
                     android:id="@+id/btnSave"
                     android:layout_width="match_parent"
