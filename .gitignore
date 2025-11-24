@@ -1,5 +1,5 @@
 # Built application files
-*.apk
+# *.apk - APK is included in repository for easy download
 *.aab
 
 # Files for the ART/Dalvik VM
